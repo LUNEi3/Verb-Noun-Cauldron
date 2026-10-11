@@ -168,25 +168,29 @@ export default function BattlePage() {
     };
   }, [team?.id, router]);
 
-  // เมื่อหมดเวลา + 3 วิ บันทึกคะแนนเข้า leaderboard ผ่าน atomic RPC
+  // เมื่อหมดเวลา + 3 วิ บันทึกคะแนนเข้า leaderboard ผ่าน atomic RPC แล้วไปหน้าผล (/winner)
   // ถาม DB ก่อน: record_match_result ไม่เช็คว่าทีมยังเล่นอยู่ไหม — มือถือที่พับจอไว้ตอนโดน Cancel
   // จะตื่นมาบันทึกทีมที่ยกเลิกไปแล้วลง leaderboard (เน็ตพังจนถามไม่ได้ = บันทึกตามเดิม)
+  // โหมด mock (ไม่มี team) ไม่เข้าเงื่อนไขนี้ → ค้างที่ป้าย TIME'S UP ตามเดิม
   useEffect(() => {
     if (finished && team?.id && !matchRecordedRef.current) {
       matchRecordedRef.current = true;
       const teamId = team.id;
       getMyMatchStatus()
-        .then((status) => {
+        .then(async (status) => {
           if (status.kind === "removed") {
             router.replace("/login");
             return;
           }
-          // finished = เพื่อนร่วมทีมบันทึกไปแล้ว
-          if (status.kind === "finished") return;
-          return recordMatchResult({ teamId });
+          // finished = เพื่อนร่วมทีมบันทึกไปแล้ว ไม่ต้องบันทึกซ้ำ
+          if (status.kind !== "finished") await recordMatchResult({ teamId });
+          // replace: กด Back จากหน้าผลแล้วไม่ย้อนกลับมาหน้า battle ที่จบไปแล้ว
+          router.replace("/winner");
         })
         .catch((err) => {
           console.error("[BattlePage] Failed to record match result:", err);
+          // บันทึกพังก็ยังพาไปหน้าผล ไม่ปล่อยผู้เล่นค้างที่ป้าย Waiting for results
+          router.replace("/winner");
         });
     }
   }, [finished, team?.id, router]);

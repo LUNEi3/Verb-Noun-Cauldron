@@ -39,7 +39,7 @@ export default function TeamRankItem({
       <div className="relative z-12 w-full flex flex-col gap-4 sm:gap-8 h-full font-pixel text-white justify-center pr-2">
         {/* แถวบน: เหรียญ + อันดับ (ซ้าย) | ชื่อทีม (ขวา) */}
         <div className="flex items-center justify-between gap-1 mt-3">
-          <div className="flex items-center gap-2  shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <div className="relative w-6 h-6 sm:w-8 sm:h-6 shrink-0 -ml-0 sm:-ml-0">
               <Image
                 src={badgeIcon}
@@ -60,7 +60,7 @@ export default function TeamRankItem({
         </div>
 
         {/* แถวล่าง: SCORE: (ซ้าย) | คะแนน (ขวา) */}
-        <div className="flex items-center justify-between text-[26px] tracking-wider px-8">
+        <div className="flex items-center justify-between text-[24px] tracking-wider px-4">
           <span className="text-white font-bold uppercase">SCORE:</span>
           <span className="font-bold text-white uppercase pr-2">{formattedScore}</span>
         </div>

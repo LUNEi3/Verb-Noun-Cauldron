@@ -9,6 +9,12 @@ import { useRouter } from "next/navigation";
 import { anonLogin } from "@/lib/anon-login";
 import { leaveLobby } from "@/lib/lobby";
 
+// ขอบโลโก้ตาม design: #36282f หนา 6px อยู่นอกตัวอักษรทั้งหมด (เงา 8 ทิศ ไม่เบลอ)
+// ไม่ใช้ -webkit-text-stroke เพราะเส้นคร่อมขอบตัวอักษร กินเนื้อชมพูเข้าไปครึ่งหนึ่ง ตัวจะดูผอม
+const logoOutline = [-6, 0, 6]
+  .flatMap((x) => [-6, 0, 6].map((y) => `${x}px ${y}px 0 #36282f`))
+  .join(", ");
+
 export default function LoginPage() {
   const [selectedTeam, setSelectedTeam] = useState<TeamId | null>(null);
   const [name, setName] = useState<string>("");
@@ -72,14 +78,17 @@ export default function LoginPage() {
         </div>
 
       <div className="relative z-10 flex w-full flex-col items-center pt-[54px]">
-        <h1 className="text-center text-[70px] font-bold text-primary [-webkit-text-stroke:2px_black] leading-18 select-none">
+        <h1
+          style={{ textShadow: logoOutline }}
+          className="text-center text-[70px] leading-[68px] text-primary select-none"
+        >
           Verb-Noun<br />Cauldron
         </h1>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="relative z-10 w-full flex flex-col items-center mt-[60px]"
+        className="relative z-10 w-full flex flex-col items-center mt-[68px]"
       >
         <TeamSelector
           selectedTeam={selectedTeam}

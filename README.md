@@ -8,8 +8,8 @@ Players team up on mobile devices to combine **Verbs** and **Nouns** into a magi
 
 ## Live Deployment
 
-- **Game URL (Mobile)**: `https://verb-noun-cauldron.vercel.app` <!-- Replace with deployed URL -->
-- **Booth Master Display (TV / 1080p)**: `https://your-deployed-game-url.vercel.app/master`
+- **Game URL (Mobile)**: [`https://verb-noun-cauldron.vercel.app`](https://verb-noun-cauldron.vercel.app) <!-- Replace with deployed URL -->
+- **Booth Master Display (TV / 1080p)**: [`https://verb-noun-cauldron.vercel.app/master`](https://verb-noun-cauldron.vercel.app/master)
 
 ---
 
@@ -129,10 +129,10 @@ lib/
   - [Pariwat Niranon / LUNEi3](https://github.com/LUNEi3/)
   - [Natpiti Chonthong / Nats-PT](https://github.com/Nats-PT/)
   - [Natnaree Hiangrach / mangeaw](https://github.com/mangeaw/)
-  - [... / Tawanwdw](https://github.com/Tawanwdw/)
+  - [Nititorn Junnanta / Tawanwdw](https://github.com/Tawanwdw/)
 - **Artwork & UI Assets**:
   - [Sarinrat Sappueng / jejesarinrat](https://github.com/jejesarinrat/)
   - [Yardthip Semathong / YardthipSemathong](https://github.com/YardthipSemathong/)
-  - [Thannaphat Pitiponthannapat / Linkedin](https://github.com/)
+  - [Thannaphat Pitiponthannapat / Thannaphat](https://github.com/thannaphatpiti-hue/)
 - **Font**:
   - [BoldPixels by YukiPixels](https://yukipixels.itch.io/boldpixels) — Used under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) without modification (details in `app/fonts/BoldPixels-LICENSE.txt`).

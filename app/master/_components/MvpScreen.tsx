@@ -5,6 +5,8 @@ import { pixelFrame } from "@/lib/pixel-frame";
 type MvpScreenProps = {
   // ทุกคนในรอบที่เพิ่งจบ (ทั้ง 2 ทีม) เรียงคะแนนแล้ว — matchStandings ใน lib/master.ts
   standings: MatchStanding[];
+  // staff ข้ามจอนี้ไปจอถัดไปเลย ไม่รอครบ WINNER_SHOW_MS
+  onSkip: () => void;
 };
 
 // กรอบชุดเดียวกับจอ master อื่น — design ขยายลายขอบ ×12 (ชมพู 12 + ม่วงหม่น 24 ≈ 36px, ขั้นมุม 12px)
@@ -49,7 +51,7 @@ function tableRank(standings: MatchStanding[], player: MatchStanding) {
 
 // จอหลังหมดเวลา (ค้าง WINNER_SHOW_MS): ไม่บอกทีมแพ้/ชนะ (มือถือบอกแล้ว) — โชว์ว่ารอบนี้ใครทำผลงานดีสุด 2 ทีมรวมกัน
 // ซ้าย = แท่น top 3, ขวา = อันดับทุกคนในรอบ
-export default function MvpScreen({ standings }: MvpScreenProps) {
+export default function MvpScreen({ standings, onSkip }: MvpScreenProps) {
   // คน 0 คะแนนไม่ขึ้นแท่น — แท่นนั้นเหลือเสาเปล่า
   const podium = standings.slice(0, PODIUMS.length).filter((player) => player.score > 0);
 
@@ -83,6 +85,15 @@ export default function MvpScreen({ standings }: MvpScreenProps) {
           );
         })}
       </ol>
+
+      {/* ปุ่มของ staff — ตัวเล็กสีจางในขอบเวทีแบบ Cancel match บนจอ battle */}
+      <button
+        type="button"
+        onClick={onSkip}
+        className="absolute right-12 bottom-0 z-40 h-12 text-score text-muted hover:text-foreground"
+      >
+        Skip
+      </button>
     </>
   );
 }

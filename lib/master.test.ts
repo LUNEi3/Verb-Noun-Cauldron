@@ -73,6 +73,21 @@ describe("เลือกจอ master", () => {
     expect(pickView(noQueue, winnerEnd)).toBe("leaderboard");
     expect(pickView(queue, winnerEnd)).toBe("prepare");
   });
+
+  it("จอ winner ค้าง 1 นาที", () => {
+    expect(WINNER_SHOW_MS).toBe(60_000);
+  });
+
+  it("staff กด Skip ระหว่างจอ winner → ไปจอถัดไปทันที (prepare ถ้ามีคนรอ ไม่งั้น leaderboard) แต่ข้ามจอ battle ไม่ได้", () => {
+    const winnerStart = endsAt + FINISH_DELAY_MS;
+    const noQueue: MasterState = { ...empty, lastMatch: match };
+    const queue: MasterState = { waiting: { 1: null, 2: team(3, 2, 1) }, lastMatch: match };
+
+    expect(pickView(noQueue, winnerStart, true)).toBe("leaderboard");
+    expect(pickView(queue, winnerStart + 1000, true)).toBe("prepare");
+    expect(pickView(noQueue, endsAt - 60_000, true)).toBe("battle");
+    expect(pickView(noQueue, winnerStart - 1, true)).toBe("battle");
+  });
 });
 
 describe("ทีมที่ได้เริ่มตอนกด Start", () => {

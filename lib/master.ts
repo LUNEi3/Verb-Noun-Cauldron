@@ -29,8 +29,8 @@ export type MasterState = {
 export const MASTER_VIEWS = ["prepare", "battle", "winner", "leaderboard"] as const;
 export type MasterView = (typeof MASTER_VIEWS)[number];
 
-// จอ winner ค้างกี่ ms ก่อนไปจอถัดไป
-export const WINNER_SHOW_MS = 15_000;
+// จอ winner (MVP) ค้างกี่ ms ก่อนไปจอถัดไป — staff กด Skip บนจอเพื่อข้ามก่อนครบได้
+export const WINNER_SHOW_MS = 60_000;
 
 export function isMasterView(value: unknown): value is MasterView {
   return MASTER_VIEWS.includes(value as MasterView);
@@ -38,12 +38,13 @@ export function isMasterView(value: unknown): value is MasterView {
 
 // เลือกจอจากข้อมูลล้วน ๆ (ไม่ยุ่ง DB) จะได้เทสได้ — now ต้องเป็นเวลาของ server
 // ดูจาก ends_at ไม่ใช่ status: ถ้าผู้เล่นปิดมือถือหมด ไม่มีใครเรียก record_match_result ทีมจะค้าง 'playing' ตลอดไป
-export function pickView(state: MasterState, now: number): MasterView {
+// skipWinner = staff กด Skip บนจอ winner ของแมตช์นี้แล้ว → ข้ามไปจอถัดไปเลย (ไม่มีผลกับจอ battle)
+export function pickView(state: MasterState, now: number, skipWinner = false): MasterView {
   const endsAt = state.lastMatch[0]?.endsAt ?? null;
   if (endsAt !== null) {
     // ช่วง TIME'S UP บนมือถือ (FINISH_DELAY_MS) ยังนับเป็นจอ battle
     if (now < endsAt + FINISH_DELAY_MS) return "battle";
-    if (now < endsAt + FINISH_DELAY_MS + WINNER_SHOW_MS) return "winner";
+    if (!skipWinner && now < endsAt + FINISH_DELAY_MS + WINNER_SHOW_MS) return "winner";
   }
   return startableTeamIds(state).length > 0 ? "prepare" : "leaderboard";
 }

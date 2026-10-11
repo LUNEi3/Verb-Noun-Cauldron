@@ -39,6 +39,8 @@ export default function MasterScreen({ forcedView }: { forcedView: MasterView | 
   const [state, setState] = useState<MasterState | null>(null);
   const [clockOffset, setClockOffset] = useState(0);
   const [dialog, setDialog] = useState<Dialog>(null);
+  // staff กด Skip บนจอ MVP — จำว่าข้ามแมตช์ไหน (matchKey) แมตช์ถัดไปจอ MVP กลับมาเองไม่ต้องล้างค่า
+  const [skippedMatch, setSkippedMatch] = useState<string | null>(null);
   // เดินทุก 1 วิ ให้เปลี่ยนจอตามเวลาได้เอง (หมดเวลา → winner → leaderboard) ไม่ต้องรอ DB เปลี่ยน
   const now = useNow();
 
@@ -126,7 +128,7 @@ export default function MasterScreen({ forcedView }: { forcedView: MasterView | 
   }
 
   const serverNow = now + clockOffset;
-  const view = forcedView ?? pickView(state, serverNow);
+  const view = forcedView ?? pickView(state, serverNow, skippedMatch === matchKey);
 
   const canCancel = cancellableTeamIds(state, serverNow).length > 0;
 
@@ -144,7 +146,10 @@ export default function MasterScreen({ forcedView }: { forcedView: MasterView | 
     // จอหลังหมดเวลา = MVP ของรอบ (ไม่บอกทีมแพ้/ชนะ — มือถือบอกแล้ว) ชื่อจอยังเป็น "winner" ตาม pickView
     case "winner":
       screen = (
-        <MvpScreen standings={matchStandings(state.lastMatch, scores.key === matchKey ? scores.byPlayer : {})} />
+        <MvpScreen
+          standings={matchStandings(state.lastMatch, scores.key === matchKey ? scores.byPlayer : {})}
+          onSkip={() => setSkippedMatch(matchKey)}
+        />
       );
       break;
     case "battle":
@@ -194,7 +199,12 @@ export default function MasterScreen({ forcedView }: { forcedView: MasterView | 
           message="Everyone (lobby and match) goes back to the login screen. The leaderboard is kept."
           backLabel="Back"
           confirmLabel="Reset everything"
-          onConfirm={resetAll}
+          onConfirm={async () => {
+            const error = await resetAll();
+            // ทีมที่จบแมตช์ไปแล้วยังมี ends_at → จอ MVP จะค้างต่อจนครบเวลา ทั้งที่ผู้เล่นถูกลบหมดแล้ว — ข้ามไปเลย
+            if (error === null) setSkippedMatch(matchKey);
+            return error;
+          }}
           onClose={() => setDialog(null)}
         />
       )}

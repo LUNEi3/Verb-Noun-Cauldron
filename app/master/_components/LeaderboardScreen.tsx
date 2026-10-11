@@ -89,9 +89,22 @@ export default function LeaderboardScreen() {
           design วาดตัวหม้อกว้าง ~410 (≈ ×3.6) → ×4 ใกล้สุดที่ยังเป็นจำนวนเต็ม (ภาพคม)
           วางให้ตัวหม้อชิดขวาล่างเลยกรอบออกไปแบบ design (ขอบขวาตัวหม้อ x ≈ 1880, ปลายขา y ≈ 1072) */}
       <div className="absolute top-[456px] left-[1392px] h-[640px] w-[512px]">
-        <Image src="/battle/cauldron.png" alt="" fill unoptimized className={pixelated} />
-        {/* ช่อง QR 169×169 กลางตัวหม้อ (ตำแหน่งตาม design) — ว่างไว้ก่อน ได้ลิงก์จริงแล้วใส่ QR ในกล่องนี้ได้เลย */}
-        <div data-qr-slot className="absolute top-[434px] left-[298px] size-[169px] -translate-x-1/2 -translate-y-1/2" />
+        <Image src="/battle/cauldron.png" alt="" fill unoptimized className={`pointer-events-none ${pixelated}`} />
+        {/* White QR card centered on the cauldron belly */}
+        <div
+          data-qr-slot
+          className="absolute top-[430px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-xl p-3 "
+        >
+          <div className="relative size-[160px]">
+            <Image
+              src="/qrcode.png"
+              alt="Scan QR code to join game"
+              fill
+              unoptimized
+              className={pixelated}
+            />
+          </div>
+        </div>
       </div>
     </>
   );

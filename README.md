@@ -1,80 +1,138 @@
 # Verb-Noun Cauldron
 
-เว็บไซต์ที่สร้างด้วย Next.js (App Router), TypeScript และ Tailwind CSS
+An interactive real-time multiplayer co-op word pairing battle game built with **Next.js 16 (App Router)**, **React 19**, **Tailwind CSS 4**, and **Supabase Realtime**.
 
-## เริ่มใช้งาน (สำหรับสมาชิกในทีม)
+Players team up on mobile devices to combine **Verbs** and **Nouns** into a magical cauldron, unleashing spells to defeat monsters and compete for high scores on a live booth display.
 
-ต้องมี [Node.js](https://nodejs.org) เวอร์ชัน 20 ขึ้นไปก่อน
+---
+
+## Live Deployment
+
+- **Game URL (Mobile)**: `https://verb-noun-cauldron.vercel.app` <!-- Replace with deployed URL -->
+- **Booth Master Display (TV / 1080p)**: `https://your-deployed-game-url.vercel.app/master`
+
+---
+
+## Game Concept & Architecture
+
+1. **Player Mobile Experience**:
+   - **`/login`**: Nickname entry with validation (1-10 chars) and team selection (**Team 1** vs **Team 2**).
+   - **`/tutorial`**: 4-page interactive pixel-art onboarding guide.
+   - **`/lobby`**: Real-time room showing teammates and opponents with ready check.
+   - **`/battle`**: Fast-paced 60-second co-op gameplay dragging cards into the bubbling cauldron.
+   - **`/winner`**: Match conclusion showing victory/defeat and score breakdown.
+   - **`/leaderboard`**: Hall of Fame displaying top team scores.
+
+2. **Booth Master Screen (`/master`)**:
+   - Fixed 1920×1080 stage optimized for event booth TVs.
+   - Autonomously orchestrates match flow: **Prepare (Lobby + QR Code)** -> **Battle** -> **Winner / MVP** -> **Leaderboard**.
+   - Includes booth staff controls (`Start`, `Cancel`, `Reset`).
+
+---
+
+## Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org) (App Router, Server & Client Components)
+- **UI & State**: [React 19](https://react.dev)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com) (Dynamic Theme Tokens & Pixel-Art Rendering)
+- **Drag & Drop**: [@dnd-kit](https://dndkit.com) (Configured for ultra-responsive mobile touch)
+- **Backend & Database**: [Supabase](https://supabase.com) (PostgreSQL, Realtime Broadcast/Presence, Anonymous Auth, RPCs)
+- **Testing**: [Vitest](https://vitest.dev) (Game Engine Unit Tests) & [Playwright](https://playwright.dev) (Drag & Drop E2E)
+- **Font**: [BoldPixels by YukiPixels](https://yukipixels.itch.io/boldpixels) (CC BY-SA 4.0)
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 20 or higher
+- npm 10 or higher
+
+### Installation
 
 ```bash
 git clone https://github.com/Nats-PT/Verb-Noun-Cauldron.git
 cd Verb-Noun-Cauldron
-npm install        # ติดตั้ง package ครั้งแรกครั้งเดียว
-npm run dev        # เปิด dev server
+npm install
 ```
 
-เปิด http://localhost:3000 ในเบราว์เซอร์ แก้ไฟล์แล้ว Save หน้าเว็บจะอัปเดตเอง
+### Environment Configuration
 
-หยุด dev server ด้วย `Ctrl + C`
+Create a `.env.local` file in the project root:
 
-## คำสั่งที่ใช้บ่อย
-
-| คำสั่ง | ทำอะไร |
-| --- | --- |
-| `npm run dev` | รันเว็บบนเครื่องตัวเองระหว่างพัฒนา |
-| `npm run build` | build เวอร์ชันจริงเพื่อเช็คว่าไม่มี error |
-| `npm run lint` | ตรวจโค้ดว่าเขียนผิดหลักตรงไหน |
-| `npm test` | ทดสอบกติกาเกมและคลังคำ (ไม่ต้องเปิด dev server) — **รันทุกครั้งหลังแก้ `lib/game/`** |
-| `npm run test:drag` | ลากการ์ดจริงในหน้า battle ด้วยเมาส์และนิ้ว (ต้องเปิด `npm run dev` ไว้ และมี Chrome/Edge) |
-
-## โครงสร้างโปรเจกต์
-
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+### Development Server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## Available Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts local Next.js development server at `localhost:3000` |
+| `npm run build` | Compiles production build and runs type verification |
+| `npm run lint` | Runs ESLint analysis across the repository |
+| `npm test` | Runs all Vitest test suites (game mechanics, combo resolver, word pool) |
+| `npm run test:drag` | Runs Playwright browser drag-and-drop simulation |
+
+---
+
+## Project Structure
+
+```text
 app/
-├── layout.tsx      โครงที่ครอบทุกหน้า (ฟอนต์ BoldPixels)
-├── globals.css     สี + ขนาดตัวอักษรกลางของทั้งเกม
-├── fonts/          ไฟล์ฟอนต์
-├── page.tsx        หน้าแรก            → /
-├── lobby/
-│   └── page.tsx    หน้า lobby         → /lobby
-└── battle/         หน้าเล่นเกม        → /battle  (ไฟล์ไหนทำอะไร: app/battle/README.md)
-components/         ชิ้นส่วน UI ที่ใช้ร่วมกันหลายหน้า (Leaderboard, MonsterStage ฯลฯ)
+├── (routes)
+│   ├── page.tsx               # Root entry (redirects to /login)
+│   ├── login/                 # Player authentication & team select
+│   ├── tutorial/              # Player onboarding guide
+│   ├── lobby/                 # Real-time waiting room
+│   ├── battle/                # Gameplay board & cauldron mechanics
+│   ├── winner/                # Match result & MVP display
+│   ├── leaderboard/           # Global high score rankings
+│   └── master/                # Booth TV stage (1920x1080)
+├── fonts/                     # BoldPixels font files
+└── globals.css                # Global theme tokens & pixel borders
+
+components/                    # Shared reusable components (MonsterStage, Leaderboard, etc.)
 lib/
-├── game/           กติกาเกม (damage, คลังคำ, มอนสเตอร์) แยกจากหน้าจอ
-├── types.ts        หน้าตาข้อมูล (ต้องตรงกับ Supabase)
-└── mock-data.ts    ข้อมูลปลอมระหว่างรอ DB
-public/             ไฟล์รูปภาพ
+├── battle.ts                  # Supabase battle sync & combat events
+├── game/                      # Core game engine, word pool & damage resolver
+├── leaderboard.ts             # Supabase leaderboard queries & RPCs
+├── lobby.ts                   # Player lobby session & presence tracking
+├── master.ts                  # Master screen state machine
+└── types.ts                   # Shared TypeScript definitions
 ```
 
-### ใช้สีและขนาดตัวอักษรกลางเสมอ
+---
 
-ห้ามใส่สีตรง ๆ อย่าง `bg-purple-500` ให้ใช้ชื่อที่ตั้งไว้ใน `app/globals.css`
+## Team Workflow & Agreements
 
-| สี | ขนาดตัวอักษร |
-| --- | --- |
-| `bg-background` `bg-surface` `border-border` | `text-head` 60px |
-| `text-foreground` `text-muted` | `text-head2` 36px |
-| `bg-primary` `hover:bg-primary-hover` | `text-body` 28px (text1 / ปุ่ม) |
-| `text-ready` | `text-score` 20px (เวลา / คะแนน) |
+- **Branching**: Create feature branches from `main` (`feature/...`, `fix/...`) and submit Pull Requests.
+- **Secrets**: Never commit `.env` or sensitive credentials (`.gitignore` enforced).
+- **Theme Integrity**: Use shared CSS tokens (`bg-primary`, `text-score`, `text-body`) defined in `app/globals.css`.
 
-การเพิ่มหน้าใหม่: สร้างโฟลเดอร์ใน `app/` แล้วใส่ไฟล์ชื่อ `page.tsx` เข้าไป
-ชื่อโฟลเดอร์จะกลายเป็น URL เช่น `app/contact/page.tsx` → `/contact`
+---
 
-## ข้อตกลงของทีม
+## Credits & Team
 
-- ห้าม commit ไฟล์ `.env` หรือรหัสผ่านใดๆ (`.gitignore` กันไว้ให้แล้ว)
-- commit บ่อยๆ พร้อมข้อความที่บอกได้ว่าทำอะไร
-- แยก branch เมื่อทำฟีเจอร์ใหม่ แล้วเปิด Pull Request เข้า `main`
-
-## เทคโนโลยีที่ใช้
-
-- [Next.js 16](https://nextjs.org/docs) — framework และระบบ routing
-- [React 19](https://react.dev) — สร้าง UI เป็น component
-- [TypeScript](https://www.typescriptlang.org/docs/) — JavaScript ที่มีการตรวจ type
-- [Tailwind CSS 4](https://tailwindcss.com/docs) — จัดหน้าตาด้วย utility class
-
-## เครดิต
-
-- ฟอนต์ [BoldPixels by YukiPixels](https://yukipixels.itch.io/boldpixels) — ใช้ภายใต้สัญญาอนุญาต
-  [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) ไม่ได้ดัดแปลงตัวฟอนต์
-  (รายละเอียดใน `app/fonts/BoldPixels-LICENSE.txt`)
+- **Developers**:
+  - [Pariwat Niranon / LUNEi3](https://github.com/LUNEi3/)
+  - [Natpiti Chonthong / Nats-PT](https://github.com/Nats-PT/)
+  - [Natnaree Hiangrach / mangeaw](https://github.com/mangeaw/)
+  - [... / Tawanwdw](https://github.com/Tawanwdw/)
+- **Artwork & UI Assets**:
+  - [Sarinrat Sappueng / jejesarinrat](https://github.com/jejesarinrat/)
+  - [Yardthip Semathong / YardthipSemathong](https://github.com/YardthipSemathong/)
+  - [Thannaphat Pitiponthannapat / Linkedin](https://github.com/)
+- **Font**:
+  - [BoldPixels by YukiPixels](https://yukipixels.itch.io/boldpixels) — Used under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) without modification (details in `app/fonts/BoldPixels-LICENSE.txt`).

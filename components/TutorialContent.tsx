@@ -17,7 +17,7 @@ const tutorialData = [
         THE MATCHING <span className="text-noun">NOUN</span>.
       </span>
     ),
-    image: "/tutorial/tutorial_1.gif",
+    image: "/tutorial/tutorial_1.webp",
   },
   {
     page: 2,
@@ -28,7 +28,7 @@ const tutorialData = [
         TO ATTACK MONSTERS!
       </span>
     ),
-    image: "/tutorial/tutorial_2.gif",
+    image: "/tutorial/tutorial_2.webp",
   },
   {
     page: 3,
@@ -39,7 +39,7 @@ const tutorialData = [
         SUMMON FINAL BOSS.
       </span>
     ),
-    image: "/tutorial/tutorial_3.gif",
+    image: "/tutorial/tutorial_3.webp",
   },
   {
     page: 4,
@@ -50,7 +50,7 @@ const tutorialData = [
         MAX DAMAGE BEFORE TIME UP!
       </span>
     ),
-    image: "/tutorial/tutorial_4.gif",
+    image: "/tutorial/tutorial_4.webp",
   },
 ];
 

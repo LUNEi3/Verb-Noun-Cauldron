@@ -10,12 +10,12 @@ type HelpModalProps = {
 
 const TOTAL_PAGES = 4;
 
-// GIF duration in ms (measured from file frames) + 1s buffer for reading
+// Animation duration in ms (measured from file frames) + 1s buffer for reading
 const GIF_DURATIONS: Record<number, number> = {
-  1: 2850 + 1000, // ~3.85s (tutorial_1.gif)
-  2: 3990 + 1000, // ~5.0s  (tutorial_2.gif)
-  3: 7380 + 1000, // ~8.38s (tutorial_3.gif)
-  4: 7230 + 1000, // ~8.23s (tutorial_4.gif)
+  1: 2850 + 1000, // ~3.85s (tutorial_1.webp)
+  2: 3990 + 1000, // ~5.0s  (tutorial_2.webp)
+  3: 7380 + 1000, // ~8.38s (tutorial_3.webp)
+  4: 7230 + 1000, // ~8.23s (tutorial_4.webp)
 };
 
 // Standard React modal overlay — closes ONLY when clicking "Got it"
@@ -29,7 +29,7 @@ export default function HelpModal({ open, onClose }: HelpModalProps) {
     }
   }, [open]);
 
-  // Auto-rotate to next step when current GIF finishes + buffer
+  // Auto-rotate to next step when current animation finishes + buffer
   useEffect(() => {
     if (!open) return;
 
